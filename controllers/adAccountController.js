@@ -18,7 +18,6 @@ const adAccountController = {
       'cpc',
       'spend',
       'purchase_roas',
-      'account_name',
       'campaign_name',
       'action_values',
       'actions',
@@ -46,6 +45,25 @@ const adAccountController = {
           data,
           paging: { cursors, hasPrevious, hasNext },
         })
+      })
+      .catch((error) => {
+        res.json(error)
+      })
+  },
+  getAdAccountInfo: (req, res) => {
+    const adAccountId = req.params.adAccountId
+    const account = new AdAccount(adAccountId)
+
+    let fields = ['name', 'business_street', 'business_street2']
+    let params = {}
+
+    account
+      .get(fields, params)
+      .then((response) => {
+        console.log(response)
+        const data = response._data
+
+        res.json(data)
       })
       .catch((error) => {
         res.json(error)
