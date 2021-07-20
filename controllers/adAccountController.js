@@ -13,6 +13,12 @@ const adAccountController = {
     const account = new AdAccount(adAccountId)
     const cursorBefore = req.query.before ? req.query.before : ''
     const cursorAfter = req.query.after ? req.query.after : ''
+    const timeRangeSince = req.query.timeRangeSince
+      ? req.query.timeRangeSince
+      : null
+    const timeRangeUntil = req.query.timeRangeUntil
+      ? req.query.timeRangeUntil
+      : null
 
     let fields = [
       'cpc',
@@ -25,12 +31,21 @@ const adAccountController = {
     ]
     let params = {
       time_increment: 1,
-      date_preset: 'lifetime',
+      date_preset: 'maximum',
       before: cursorBefore,
       after: cursorAfter,
       level: 'campaign',
       sort: 'date_start_descending',
       limit: 1000,
+    }
+    if (timeRangeSince && timeRangeUntil) {
+      params = {
+        ...params,
+        time_range: {
+          since: timeRangeSince,
+          until: timeRangeUntil,
+        },
+      }
     }
 
     account
